@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Backend Code – Presentation</title>
+<style>
+  /* ── Global ── */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4ff; color: #1a1a2e; }
+
+  /* ── Page / Slide ── */
+  .page {
+    width: 1100px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 40px #b0b8d022;
+    padding: 56px 64px 48px;
+    page-break-after: always;
+  }
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; width: 100%; }
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 2.6rem; color: #fff; }
+  h2 { font-size: 1.9rem; color: #1a237e; margin-bottom: 18px; }
+  h3 { font-size: 1.25rem; color: #283593; margin-bottom: 10px; }
+  p  { font-size: 1.02rem; line-height: 1.7; color: #333; }
+  ul { padding-left: 22px; }
+  li { font-size: 1rem; line-height: 1.75; color: #333; }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #1976d2 100%);
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 18px;
+  }
+  .cover h1 { font-size: 3rem; margin-bottom: 14px; }
+  .cover p  { font-size: 1.2rem; color: #c5cae9; max-width: 680px; }
+  .badge {
+    display: inline-block;
+    background: #fff2;
+    color: #e8eaf6;
+    border: 1.5px solid #fff5;
+    border-radius: 20px;
+    padding: 6px 22px;
+    font-size: 0.95rem;
+    margin-top: 22px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Section label ── */
+  .label {
+    display: inline-block;
+    background: #e8eaf6;
+    color: #3949ab;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    padding: 3px 12px;
+    margin-bottom: 10px;
+  }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 2px solid #e8eaf6; margin: 28px 0; }
+
+  /* ── Cards ── */
+  .cards { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 20px; }
+  .card {
+    flex: 1 1 200px;
+    background: #f3f4fb;
+    border: 1.5px solid #c5cae9;
+    border-radius: 14px;
+    padding: 22px 20px;
+    text-align: center;
+  }
+  .card .icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .card h3 { font-size: 1.05rem; color: #1a237e; margin-bottom: 6px; }
+  .card p  { font-size: 0.9rem; color: #555; }
+
+  /* ── Flow diagram ── */
+  .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 24px 0; }
+  .flow-box {
+    background: #3949ab;
+    color: #fff;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 110px;
+  }
+  .flow-box.green  { background: #388e3c; }
+  .flow-box.red    { background: #c62828; }
+  .flow-box.orange { background: #e65100; }
+  .flow-box.teal   { background: #00695c; }
+  .flow-box.purple { background: #6a1b9a; }
+  .flow-arrow { font-size: 1.5rem; color: #9fa8da; padding: 0 6px; }
+
+  /* ── Route table ── */
+  table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 0.93rem; }
+  th { background: #1a237e; color: #fff; padding: 10px 14px; text-align: left; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e8eaf6; }
+  tr:nth-child(even) td { background: #f5f6fb; }
+  .method { display: inline-block; border-radius: 5px; padding: 2px 9px; font-weight: 700; font-size: 0.8rem; }
+  .get    { background: #e3f2fd; color: #1565c0; }
+  .post   { background: #e8f5e9; color: #2e7d32; }
+  .put    { background: #fff8e1; color: #f57f17; }
+  .del    { background: #fce4ec; color: #b71c1c; }
+
+  /* ── Architecture SVG wrapper ── */
+  .svg-wrap { text-align: center; margin: 24px 0; }
+  svg { max-width: 100%; }
+
+  /* ── Highlight box ── */
+  .info-box {
+    background: #e8eaf6;
+    border-left: 5px solid #3949ab;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    font-size: 0.97rem;
+    color: #1a237e;
+  }
+  .warn-box {
+    background: #fff8e1;
+    border-left: 5px solid #f9a825;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    font-size: 0.97rem;
+    color: #5d4037;
+  }
+
+  /* ── Two columns ── */
+  .two-col { display: flex; gap: 30px; }
+  .two-col > div { flex: 1; }
+
+  /* ── Numbered steps ── */
+  .steps { counter-reset: step; }
+  .step  { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 18px; }
+  .step-num {
+    counter-increment: step;
+    background: #3949ab;
+    color: #fff;
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .step-num::before { content: counter(step); }
+  .step-body h3 { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 1 – COVER ═══ -->
+<div class="page">
+  <div class="cover">
+    <h1>🖥️ Backend Architecture</h1>
+    <p>A simple, visual walk-through of how the server works —<br>
+       what every file and route does, explained clearly</p>
+    <span class="badge">Node.js · Express · MongoDB · JWT · Gemini AI</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 2 – OVERVIEW ═══ -->
+<div class="page">
+  <div class="label">Slide 2</div>
+  <h2>🗺️ What is the Backend?</h2>
+  <p>The backend is the <strong>"brain"</strong> of the application. The user never sees it directly — it lives on a server, talks to the database, and sends answers back to the website (frontend).</p>
+
+  <div class="cards" style="margin-top:30px;">
+    <div class="card">
+      <div class="icon">🌐</div>
+      <h3>Frontend sends a request</h3>
+      <p>User clicks login / submits code / opens a problem</p>
+    </div>
+    <div class="card">
+      <div class="icon">⚙️</div>
+      <h3>Backend processes it</h3>
+      <p>Checks permissions, runs logic, talks to the database</p>
+    </div>
+    <div class="card">
+      <div class="icon">🗄️</div>
+      <h3>Database stores data</h3>
+      <p>MongoDB saves users, problems, submissions, contests…</p>
+    </div>
+    <div class="card">
+      <div class="icon">📦</div>
+      <h3>Response sent back</h3>
+      <p>JSON data returned → frontend shows it to the user</p>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:30px;">
+    💡 <strong>Simple analogy:</strong> Think of the backend like a <em>restaurant kitchen</em>.
+    The customer (frontend) orders food. The waiter (API route) takes the order to the kitchen (backend logic), which prepares it using ingredients (database) and sends the dish back.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 3 – ARCHITECTURE ═══ -->
+<div class="page">
+  <div class="label">Slide 3</div>
+  <h2>🏗️ System Architecture Diagram</h2>
+  <p>How all the pieces connect together in one picture:</p>
+
+  <div class="svg-wrap">
+    <svg width="950" height="460" viewBox="0 0 950 460" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+
+      <!-- Browser -->
+      <rect x="20" y="180" width="140" height="100" rx="12" fill="#e8eaf6" stroke="#3949ab" stroke-width="2"/>
+      <text x="90" y="222" text-anchor="middle" font-size="30">🌐</text>
+      <text x="90" y="252" text-anchor="middle" font-size="14" font-weight="700" fill="#1a237e">Frontend</text>
+      <text x="90" y="268" text-anchor="middle" font-size="11" fill="#555">React App</text>
+
+      <!-- Arrow 1 -->
+      <line x1="163" y1="230" x2="220" y2="230" stroke="#9fa8da" stroke-width="2.5" marker-end="url(#arr)"/>
+      <text x="190" y="222" text-anchor="middle" font-size="10" fill="#666">HTTP</text>
+
+      <!-- Express Server -->
+      <rect x="220" y="150" width="160" height="160" rx="12" fill="#3949ab" stroke="#1a237e" stroke-width="2"/>
+      <text x="300" y="195" text-anchor="middle" font-size="20" fill="#fff">⚙️</text>
+      <text x="300" y="220" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Express</text>
+      <text x="300" y="238" text-anchor="middle" font-size="11" fill="#c5cae9">server.js</text>
+      <text x="300" y="256" text-anchor="middle" font-size="11" fill="#c5cae9">Port 5000</text>
+      <text x="300" y="272" text-anchor="middle" font-size="11" fill="#c5cae9">CORS · JSON</text>
+      <text x="300" y="290" text-anchor="middle" font-size="11" fill="#c5cae9">Auth Middleware</text>
+
+      <!-- Arrow 2 -->
+      <line x1="383" y1="230" x2="440" y2="230" stroke="#9fa8da" stroke-width="2.5" marker-end="url(#arr)"/>
+      <text x="410" y="222" text-anchor="middle" font-size="10" fill="#666">routes</text>
+
+      <!-- Router block -->
+      <rect x="440" y="60" width="180" height="350" rx="12" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+      <text x="530" y="95" text-anchor="middle" font-size="13" font-weight="700" fill="#1b5e20">📁 API Routes</text>
+      <text x="530" y="120" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/auth</text>
+      <text x="530" y="140" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/problems</text>
+      <text x="530" y="160" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/submissions</text>
+      <text x="530" y="180" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/run</text>
+      <text x="530" y="200" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/ai</text>
+      <text x="530" y="220" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/contests</text>
+      <text x="530" y="240" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/leaderboard</text>
+      <text x="530" y="260" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/discussions</text>
+      <text x="530" y="280" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/placements</text>
+      <text x="530" y="300" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/teacher</text>
+      <text x="530" y="320" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/admin</text>
+      <text x="530" y="340" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/daily · /api/prep</text>
+      <text x="530" y="360" text-anchor="middle" font-size="11.5" fill="#2e7d32">/api/bookmarks · /api/notif</text>
+
+      <!-- Arrow 3 →MongoDB -->
+      <line x1="623" y1="200" x2="680" y2="200" stroke="#9fa8da" stroke-width="2.5" marker-end="url(#arr)"/>
+      <!-- Arrow 4 →AI -->
+      <line x1="623" y1="310" x2="680" y2="350" stroke="#9fa8da" stroke-width="2.5" marker-end="url(#arr)"/>
+
+      <!-- MongoDB -->
+      <rect x="680" y="100" width="148" height="160" rx="12" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="754" y="155" text-anchor="middle" font-size="28">🗄️</text>
+      <text x="754" y="185" text-anchor="middle" font-size="14" font-weight="700" fill="#bf360c">MongoDB</text>
+      <text x="754" y="205" text-anchor="middle" font-size="11" fill="#6d4c41">users · problems</text>
+      <text x="754" y="222" text-anchor="middle" font-size="11" fill="#6d4c41">submissions · contests</text>
+      <text x="754" y="239" text-anchor="middle" font-size="11" fill="#6d4c41">discussions · scores</text>
+
+      <!-- Gemini AI -->
+      <rect x="680" y="300" width="148" height="100" rx="12" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+      <text x="754" y="342" text-anchor="middle" font-size="22">🤖</text>
+      <text x="754" y="368" text-anchor="middle" font-size="13" font-weight="700" fill="#4a148c">Gemini AI</text>
+      <text x="754" y="386" text-anchor="middle" font-size="11" fill="#7b1fa2">Problem Generator</text>
+
+      <!-- Code Runner -->
+      <rect x="680" y="30" width="148" height="60" rx="12" fill="#e0f7fa" stroke="#006064" stroke-width="2"/>
+      <text x="754" y="55" text-anchor="middle" font-size="20">🚀</text>
+      <text x="754" y="76" text-anchor="middle" font-size="13" font-weight="700" fill="#004d40">Code Runner</text>
+      <line x1="623" y1="100" x2="680" y2="60" stroke="#9fa8da" stroke-width="2.5" marker-end="url(#arr)"/>
+
+      <!-- JWT Auth -->
+      <rect x="820" y="180" width="110" height="70" rx="12" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+      <text x="875" y="208" text-anchor="middle" font-size="18">🔑</text>
+      <text x="875" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#b71c1c">JWT Auth</text>
+      <line x1="300" y1="310" x2="875" y2="180" stroke="#f48fb1" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arr)"/>
+
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#9fa8da"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 4 – SERVER.JS ═══ -->
+<div class="page">
+  <div class="label">Slide 4</div>
+  <h2>📄 server.js — The Entry Point</h2>
+  <p><strong>This is the first file that runs.</strong> It starts the whole server. Think of it as the <em>main gate</em> of the building.</p>
+  <hr/>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h3>Start Express App</h3>
+        <p>Creates the web server on port <strong>5000</strong>. Like opening a shop at a specific address.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h3>Enable CORS</h3>
+        <p>Allows the React frontend (running on port 5173) to talk to this server. Without CORS, the browser would block the request for security reasons.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h3>Attach Auth Middleware</h3>
+        <p>Before every request, it checks if the user is logged in by reading their JWT cookie. Sets <code>req.user</code> for all routes to use.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h3>Register All Routes</h3>
+        <p>Connects 15 route modules — each handles a different feature group (auth, problems, AI, contests, etc.).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <h3>Health Check Endpoint</h3>
+        <p>GET <code>/health</code> — anyone can call this to see if the server and database are running. Useful for monitoring.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    🔵 <strong>Key idea:</strong> <code>server.js</code> does NOT contain business logic. It only wires things together — like a power strip connecting many devices.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 5 – AUTH FLOW ═══ -->
+<div class="page">
+  <div class="label">Slide 5</div>
+  <h2>🔐 Authentication System</h2>
+  <p>How the system knows <em>who you are</em> and <em>whether you are allowed</em> to do something.</p>
+  <hr/>
+
+  <div class="two-col">
+    <div>
+      <h3>📁 auth.js — Core Security Utilities</h3>
+      <ul style="margin-top:10px;">
+        <li><strong>hashPassword()</strong> — Converts plain password → scrambled hash using bcrypt (one-way, cannot be reversed)</li>
+        <li><strong>comparePassword()</strong> — Checks if entered password matches stored hash</li>
+        <li><strong>signToken()</strong> — Creates a JWT token containing user ID, role, and email. Valid for 7 days</li>
+        <li><strong>verifyToken()</strong> — Reads the token and checks if it's valid and not expired</li>
+        <li><strong>createAuthCookie()</strong> — Stores the token in an HTTP-only cookie (secure, can't be stolen by JavaScript)</li>
+      </ul>
+    </div>
+    <div>
+      <h3>📁 middleware.js — Request Guard</h3>
+      <ul style="margin-top:10px;">
+        <li><strong>authMiddleware</strong> — Runs on EVERY request. Extracts the cookie token and sets <code>req.user</code></li>
+        <li><strong>requireAuth</strong> — Blocks the request with 401 if user is not logged in</li>
+        <li><strong>requireRole("admin")</strong> — Blocks with 403 if user doesn't have the right role (student / teacher / admin)</li>
+      </ul>
+
+      <div class="warn-box" style="margin-top:20px;">
+        🔑 <strong>3 Roles:</strong><br/>
+        • <em>Student</em> — solve problems, join contests<br/>
+        • <em>Teacher</em> — create problems, manage students<br/>
+        • <em>Admin</em> — full access to everything
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+  <h3>Login Flow — Step by Step</h3>
+  <div class="flow" style="margin-top:16px;">
+    <div class="flow-box">User sends<br/>email + password</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box orange">Find user<br/>in MongoDB</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box orange">Compare<br/>password hash</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Create<br/>JWT Token</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Set Cookie<br/>on Browser</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box teal">Return user<br/>profile JSON</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 6 – ROUTES MAP ═══ -->
+<div class="page">
+  <div class="label">Slide 6</div>
+  <h2>🗂️ All API Routes — What Each Does</h2>
+  <p>The backend has <strong>15 route modules</strong>. Each one handles one feature area of the platform:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Module File</th>
+        <th>URL Prefix</th>
+        <th>What it Does</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>auth.js</strong></td><td><code>/api/auth</code></td><td>Register, Login, Logout, get current user profile</td></tr>
+      <tr><td><strong>problems.js</strong></td><td><code>/api/problems</code></td><td>List all problems, filter by difficulty/category, create/update/delete problems</td></tr>
+      <tr><td><strong>problems_slug.js</strong></td><td><code>/api/problems/:slug</code></td><td>Get one problem by its URL slug (e.g. <code>two-sum</code>)</td></tr>
+      <tr><td><strong>submissions.js</strong></td><td><code>/api/submissions</code></td><td>Save user code submissions, track pass/fail counts per problem</td></tr>
+      <tr><td><strong>run.js</strong></td><td><code>/api/run</code></td><td>Execute user JavaScript code safely in a temp file, run against test cases</td></tr>
+      <tr><td><strong>ai.js</strong></td><td><code>/api/ai</code></td><td>Generate problems using Google Gemini AI, give hints, explain solutions</td></tr>
+      <tr><td><strong>contests.js</strong></td><td><code>/api/contests</code></td><td>List, join, and manage timed coding contests; calculate scores</td></tr>
+      <tr><td><strong>leaderboard.js</strong></td><td><code>/api/leaderboard</code></td><td>Return top users ranked by problems solved / score</td></tr>
+      <tr><td><strong>discussions.js</strong></td><td><code>/api/discussions</code></td><td>Forum posts per problem — create, reply, like posts</td></tr>
+      <tr><td><strong>placements.js</strong></td><td><code>/api/placements</code></td><td>Placement preparation resources — companies, questions, experiences</td></tr>
+      <tr><td><strong>teacher.js</strong></td><td><code>/api/teacher</code></td><td>Teacher dashboard — see student progress, assign problems, view stats</td></tr>
+      <tr><td><strong>admin.js</strong></td><td><code>/api/admin</code></td><td>Admin panel — manage all users, reset passwords, view system stats</td></tr>
+      <tr><td><strong>bookmarks.js</strong></td><td><code>/api/bookmarks</code></td><td>Save/remove bookmarked problems for quick access later</td></tr>
+      <tr><td><strong>daily.js</strong></td><td><code>/api/daily</code></td><td>Return today's "problem of the day"; track daily streaks</td></tr>
+      <tr><td><strong>prep.js</strong></td><td><code>/api/prep</code></td><td>Study prep material — notes, videos, topic guides</td></tr>
+      <tr><td><strong>notifications.js</strong></td><td><code>/api/notifications</code></td><td>User notifications — contest reminders, badge unlocks, alerts</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 7 – CODE RUNNER ═══ -->
+<div class="page">
+  <div class="label">Slide 7</div>
+  <h2>🚀 Code Execution Engine (run.js)</h2>
+  <p>This is one of the most interesting parts. When a student submits code, the server <strong>actually runs it</strong>.</p>
+  <hr/>
+
+  <div class="info-box">
+    ⚠️ <strong>Challenge:</strong> Running user-submitted code is dangerous — it could do anything! The system keeps it safe by running it as a temporary file with a 5-second timeout.
+  </div>
+
+  <h3 style="margin-top:24px;">How Code Execution Works:</h3>
+  <div class="flow" style="margin-top:16px; flex-wrap:wrap; gap:10px;">
+    <div class="flow-box">User sends<br/>JavaScript code</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box orange">Write code to<br/>temp .mjs file</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box purple">Run with<br/><code>node file.mjs</code></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box orange">Capture<br/>stdout / stderr</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box red">Delete<br/>temp file</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Return<br/>output/error</div>
+  </div>
+
+  <hr/>
+  <div class="two-col" style="margin-top:10px;">
+    <div>
+      <h3>POST /api/run/js</h3>
+      <p>Simply runs any code and returns whatever it prints. Used for the "Run Code" button in the editor.</p>
+    </div>
+    <div>
+      <h3>POST /api/run/test</h3>
+      <p>Runs code against multiple test cases. For each test, compares actual output to expected output. Returns pass/fail per test case automatically.</p>
+    </div>
+  </div>
+
+  <div class="warn-box" style="margin-top:20px;">
+    🛡️ <strong>Safety features:</strong> 5-second timeout kills infinite loops. Temp file is deleted after each run. Only JavaScript (Node.js) is supported.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 8 – AI ═══ -->
+<div class="page">
+  <div class="label">Slide 8</div>
+  <h2>🤖 AI Integration (ai.js → Google Gemini)</h2>
+  <p>The platform uses <strong>Google Gemini 2.0 Flash</strong> AI to make the coding experience smarter and more dynamic.</p>
+  <hr/>
+
+  <div class="cards" style="margin-top:20px;">
+    <div class="card">
+      <div class="icon">🧠</div>
+      <h3>Generate Problem</h3>
+      <p>Teacher picks a topic (e.g. "Binary Trees") and difficulty — AI writes a full coding problem with examples, test cases and hints</p>
+    </div>
+    <div class="card">
+      <div class="icon">💡</div>
+      <h3>Get Hint</h3>
+      <p>Stuck on a problem? AI gives a gentle nudge without revealing the full answer</p>
+    </div>
+    <div class="card">
+      <div class="icon">📖</div>
+      <h3>Explain Solution</h3>
+      <p>After solving, AI explains the approach in simple language with complexity analysis</p>
+    </div>
+    <div class="card">
+      <div class="icon">✅</div>
+      <h3>Review Code</h3>
+      <p>AI reads student's submitted code and suggests improvements and cleaner approaches</p>
+    </div>
+  </div>
+
+  <hr/>
+  <h3>How AI API call works:</h3>
+  <div class="flow" style="margin-top:14px;">
+    <div class="flow-box">Frontend sends<br/>topic + difficulty</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box purple">Build prompt<br/>text for Gemini</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box purple">Call Google<br/>Gemini API</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box orange">Parse JSON<br/>from response</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Return structured<br/>problem to user</div>
+  </div>
+
+  <div class="info-box" style="margin-top:22px;">
+    🔑 <strong>API Key:</strong> The system uses either a stored environment variable key or the user's own Gemini API key if they provide one.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 9 – DATABASE ═══ -->
+<div class="page">
+  <div class="label">Slide 9</div>
+  <h2>🗄️ Database Structure (MongoDB)</h2>
+  <p>All data is stored in <strong>MongoDB</strong> — a document database (stores data like JSON, not tables).</p>
+  <hr/>
+
+  <div class="svg-wrap">
+    <svg width="900" height="320" viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+
+      <!-- MongoDB label -->
+      <rect x="370" y="10" width="160" height="50" rx="10" fill="#e65100"/>
+      <text x="450" y="33" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">🗄️ MongoDB</text>
+      <text x="450" y="50" text-anchor="middle" font-size="11" fill="#ffe0b2">Collections (tables)</text>
+
+      <!-- Collections -->
+      <g transform="translate(20,90)">
+        <rect width="130" height="80" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+        <text x="65" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#bf360c">👤 users</text>
+        <text x="65" y="44" text-anchor="middle" font-size="10" fill="#5d4037">username, email</text>
+        <text x="65" y="58" text-anchor="middle" font-size="10" fill="#5d4037">passwordHash, role</text>
+        <text x="65" y="72" text-anchor="middle" font-size="10" fill="#5d4037">score, streak</text>
+        <line x1="65" y1="-30" x2="430" y2="-30" stroke="#ffcc80" stroke-width="1.5"/>
+        <line x1="65" y1="-30" x2="65" y2="0" stroke="#ffcc80" stroke-width="1.5"/>
+      </g>
+
+      <g transform="translate(180,90)">
+        <rect width="140" height="80" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5"/>
+        <text x="70" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#1b5e20">📝 problems</text>
+        <text x="70" y="44" text-anchor="middle" font-size="10" fill="#2e7d32">title, slug, difficulty</text>
+        <text x="70" y="58" text-anchor="middle" font-size="10" fill="#2e7d32">description, testCases</text>
+        <text x="70" y="72" text-anchor="middle" font-size="10" fill="#2e7d32">starterCode, tags</text>
+        <line x1="70" y1="-30" x2="70" y2="0" stroke="#a5d6a7" stroke-width="1.5"/>
+      </g>
+
+      <g transform="translate(350,90)">
+        <rect width="145" height="80" rx="10" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+        <text x="72" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#1a237e">📊 submissions</text>
+        <text x="72" y="44" text-anchor="middle" font-size="10" fill="#283593">userId, problemId</text>
+        <text x="72" y="58" text-anchor="middle" font-size="10" fill="#283593">code, status</text>
+        <text x="72" y="72" text-anchor="middle" font-size="10" fill="#283593">runtime, createdAt</text>
+        <line x1="72" y1="-30" x2="72" y2="0" stroke="#9fa8da" stroke-width="1.5"/>
+      </g>
+
+      <g transform="translate(520,90)">
+        <rect width="130" height="80" rx="10" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+        <text x="65" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#b71c1c">🏆 contests</text>
+        <text x="65" y="44" text-anchor="middle" font-size="10" fill="#c62828">title, startTime</text>
+        <text x="65" y="58" text-anchor="middle" font-size="10" fill="#c62828">problems[], duration</text>
+        <text x="65" y="72" text-anchor="middle" font-size="10" fill="#c62828">participants</text>
+        <line x1="65" y1="-30" x2="65" y2="0" stroke="#f48fb1" stroke-width="1.5"/>
+      </g>
+
+      <g transform="translate(680,90)">
+        <rect width="150" height="80" rx="10" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5"/>
+        <text x="75" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#4a148c">💬 discussions</text>
+        <text x="75" y="44" text-anchor="middle" font-size="10" fill="#7b1fa2">problemId, userId</text>
+        <text x="75" y="58" text-anchor="middle" font-size="10" fill="#7b1fa2">content, likes</text>
+        <text x="75" y="72" text-anchor="middle" font-size="10" fill="#7b1fa2">replies[], createdAt</text>
+        <line x1="75" y1="-30" x2="75" y2="0" stroke="#ce93d8" stroke-width="1.5"/>
+      </g>
+
+      <!-- Row 2 -->
+      <g transform="translate(20,220)">
+        <rect width="130" height="70" rx="10" fill="#e0f7fa" stroke="#006064" stroke-width="1.5"/>
+        <text x="65" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#004d40">📌 bookmarks</text>
+        <text x="65" y="40" text-anchor="middle" font-size="10" fill="#006064">userId, problemId</text>
+        <text x="65" y="55" text-anchor="middle" font-size="10" fill="#006064">createdAt</text>
+      </g>
+
+      <g transform="translate(180,220)">
+        <rect width="140" height="70" rx="10" fill="#fff8e1" stroke="#f57f17" stroke-width="1.5"/>
+        <text x="70" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#e65100">📅 daily</text>
+        <text x="70" y="40" text-anchor="middle" font-size="10" fill="#795548">date, problemId</text>
+        <text x="70" y="55" text-anchor="middle" font-size="10" fill="#795548">userStreaks</text>
+      </g>
+
+      <g transform="translate(350,220)">
+        <rect width="145" height="70" rx="10" fill="#f1f8e9" stroke="#558b2f" stroke-width="1.5"/>
+        <text x="72" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#33691e">📚 prep</text>
+        <text x="72" y="40" text-anchor="middle" font-size="10" fill="#558b2f">topic, content</text>
+        <text x="72" y="55" text-anchor="middle" font-size="10" fill="#558b2f">videos, notes, type</text>
+      </g>
+
+      <g transform="translate(520,220)">
+        <rect width="130" height="70" rx="10" fill="#fbe9e7" stroke="#bf360c" stroke-width="1.5"/>
+        <text x="65" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#bf360c">🔔 notif.</text>
+        <text x="65" y="40" text-anchor="middle" font-size="10" fill="#bf360c">userId, message</text>
+        <text x="65" y="55" text-anchor="middle" font-size="10" fill="#bf360c">type, read, date</text>
+      </g>
+
+      <g transform="translate(680,220)">
+        <rect width="150" height="70" rx="10" fill="#e8eaf6" stroke="#283593" stroke-width="1.5"/>
+        <text x="75" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#1a237e">🏢 placements</text>
+        <text x="75" y="40" text-anchor="middle" font-size="10" fill="#283593">company, role</text>
+        <text x="75" y="55" text-anchor="middle" font-size="10" fill="#283593">questions[], tips</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <div class="info-box">
+    💡 <strong>mongodb.js</strong> handles the connection. If no real MongoDB URL is set, it uses an <em>in-memory</em> mode so the app still works without a database during development.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 10 – ROLES ═══ -->
+<div class="page">
+  <div class="label">Slide 10</div>
+  <h2>👥 User Roles & Permissions</h2>
+  <p>The system has <strong>3 types of users</strong>. Each has different access rights enforced by <code>requireRole()</code> middleware.</p>
+  <hr/>
+
+  <div class="cards" style="margin-top:24px;">
+    <div class="card" style="border-color:#4caf50;">
+      <div class="icon">🎓</div>
+      <h3 style="color:#2e7d32;">Student</h3>
+      <ul style="text-align:left; font-size:0.88rem;">
+        <li>View and solve problems</li>
+        <li>Submit code for judging</li>
+        <li>Join contests</li>
+        <li>View leaderboard</li>
+        <li>Bookmark problems</li>
+        <li>Post in discussions</li>
+        <li>Use AI hints</li>
+        <li>Track daily streak</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:#ff9800;">
+      <div class="icon">👨‍🏫</div>
+      <h3 style="color:#e65100;">Teacher</h3>
+      <ul style="text-align:left; font-size:0.88rem;">
+        <li>Everything students can do</li>
+        <li>Create new problems</li>
+        <li>Generate problems with AI</li>
+        <li>View student progress</li>
+        <li>Access teacher dashboard</li>
+        <li>Manage placement data</li>
+        <li>Create contests</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:#f44336;">
+      <div class="icon">🛡️</div>
+      <h3 style="color:#c62828;">Admin</h3>
+      <ul style="text-align:left; font-size:0.88rem;">
+        <li>Everything teachers can do</li>
+        <li>Manage all users</li>
+        <li>Reset user passwords</li>
+        <li>Delete any content</li>
+        <li>View system statistics</li>
+        <li>Access admin panel</li>
+        <li>Seed database</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="svg-wrap" style="margin-top:30px;">
+    <svg width="700" height="100" viewBox="0 0 700 100" font-family="Segoe UI,Arial,sans-serif">
+      <rect x="10" y="25" width="200" height="50" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+      <text x="110" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#2e7d32">🎓 Student Access</text>
+
+      <rect x="10" y="25" width="420" height="50" rx="10" fill="#fff8e1" stroke="#ff9800" stroke-width="2"/>
+      <text x="350" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#e65100">👨‍🏫 Teacher Access (includes Student)</text>
+
+      <rect x="10" y="25" width="670" height="50" rx="10" fill="#fce4ec" stroke="#f44336" stroke-width="2"/>
+      <text x="600" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#c62828">🛡️ Admin</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 11 – SUMMARY ═══ -->
+<div class="page">
+  <div class="label">Slide 11</div>
+  <h2>📋 Summary — Backend in One Page</h2>
+  <hr/>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>File(s)</th><th>Simple Explanation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Server Startup</strong></td><td>server.js</td><td>Starts on port 5000, enables CORS, wires up all routes</td></tr>
+      <tr><td><strong>Security</strong></td><td>auth.js, middleware.js</td><td>Hashes passwords, creates JWT cookies, guards routes by role</td></tr>
+      <tr><td><strong>Database</strong></td><td>mongodb.js</td><td>Connects to MongoDB; falls back to in-memory for dev</td></tr>
+      <tr><td><strong>User Auth</strong></td><td>routes/auth.js</td><td>Login, register, logout endpoints</td></tr>
+      <tr><td><strong>Problems</strong></td><td>routes/problems.js</td><td>CRUD for coding problems with filtering</td></tr>
+      <tr><td><strong>Code Runner</strong></td><td>routes/run.js</td><td>Safely executes JS code in temp files, runs test cases</td></tr>
+      <tr><td><strong>Submissions</strong></td><td>routes/submissions.js</td><td>Saves each attempt, tracks pass/fail stats</td></tr>
+      <tr><td><strong>AI System</strong></td><td>routes/ai.js</td><td>Google Gemini integration for problem generation and hints</td></tr>
+      <tr><td><strong>Contests</strong></td><td>routes/contests.js</td><td>Timed coding competitions with scoring</td></tr>
+      <tr><td><strong>Leaderboard</strong></td><td>routes/leaderboard.js</td><td>Rankings by score / problems solved</td></tr>
+      <tr><td><strong>Discussions</strong></td><td>routes/discussions.js</td><td>Forum comments per problem</td></tr>
+      <tr><td><strong>Teacher Panel</strong></td><td>routes/teacher.js</td><td>Student progress view, problem assignment</td></tr>
+      <tr><td><strong>Admin Panel</strong></td><td>routes/admin.js</td><td>User management, system-wide control</td></tr>
+      <tr><td><strong>Placements</strong></td><td>routes/placements.js</td><td>Company interview prep content</td></tr>
+      <tr><td><strong>Daily + Prep</strong></td><td>routes/daily.js, prep.js</td><td>Daily coding challenges and study materials</td></tr>
+      <tr><td><strong>Bookmarks + Notifs</strong></td><td>routes/bookmarks.js, notifications.js</td><td>Saved problems and user alerts</td></tr>
+    </tbody>
+  </table>
+
+  <div class="info-box" style="margin-top:24px;">
+    <strong>Tech Stack:</strong> Node.js + Express (server) · MongoDB (database) · JSON Web Tokens / bcrypt (security) · Google Gemini AI (AI features) · Node child_process (code execution)
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SLIDE 12 – REQUEST LIFECYCLE ═══ -->
+<div class="page">
+  <div class="label">Slide 12</div>
+  <h2>🔄 Full Request Lifecycle Diagram</h2>
+  <p>What happens every single time the frontend makes an API call:</p>
+
+  <div class="svg-wrap">
+    <svg width="880" height="400" viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+
+      <!-- Swim lanes background -->
+      <rect x="0" y="0" width="880" height="400" rx="16" fill="#f7f8fd"/>
+      <rect x="0" y="0" width="880" height="50" rx="16" fill="#1a237e"/>
+      <text x="440" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Every API Request — Step by Step Timeline</text>
+      <text x="440" y="47" text-anchor="middle" font-size="11" fill="#c5cae9">Time flows left → right</text>
+
+      <!-- Steps row 1 -->
+      <!-- Box 1 -->
+      <rect x="20" y="80" width="120" height="70" rx="10" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+      <text x="80" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#1a237e">1. Request</text>
+      <text x="80" y="122" text-anchor="middle" font-size="10" fill="#333">User action</text>
+      <text x="80" y="136" text-anchor="middle" font-size="10" fill="#333">triggers HTTP call</text>
+
+      <line x1="143" y1="115" x2="170" y2="115" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <!-- Box 2 -->
+      <rect x="172" y="80" width="120" height="70" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+      <text x="232" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#bf360c">2. CORS</text>
+      <text x="232" y="122" text-anchor="middle" font-size="10" fill="#333">Check origin is</text>
+      <text x="232" y="136" text-anchor="middle" font-size="10" fill="#333">allowed</text>
+
+      <line x1="295" y1="115" x2="322" y2="115" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <!-- Box 3 -->
+      <rect x="324" y="80" width="140" height="70" rx="10" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+      <text x="394" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#b71c1c">3. Auth Middleware</text>
+      <text x="394" y="122" text-anchor="middle" font-size="10" fill="#333">Read JWT cookie</text>
+      <text x="394" y="136" text-anchor="middle" font-size="10" fill="#333">set req.user</text>
+
+      <line x1="467" y1="115" x2="494" y2="115" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <!-- Box 4 -->
+      <rect x="496" y="80" width="120" height="70" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5"/>
+      <text x="556" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#1b5e20">4. Route Match</text>
+      <text x="556" y="122" text-anchor="middle" font-size="10" fill="#333">Find correct</text>
+      <text x="556" y="136" text-anchor="middle" font-size="10" fill="#333">route handler</text>
+
+      <line x1="619" y1="115" x2="646" y2="115" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <!-- Box 5 -->
+      <rect x="648" y="80" width="130" height="70" rx="10" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+      <text x="713" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#1a237e">5. Role Check</text>
+      <text x="713" y="122" text-anchor="middle" font-size="10" fill="#333">requireAuth /</text>
+      <text x="713" y="136" text-anchor="middle" font-size="10" fill="#333">requireRole guard</text>
+
+      <!-- Row 2 -->
+      <!-- Connector down -->
+      <line x1="780" y1="150" x2="780" y2="200" stroke="#9fa8da" stroke-width="2"/>
+      <line x1="780" y1="200" x2="730" y2="200" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <rect x="540" y="185" width="190" height="70" rx="10" fill="#fff8e1" stroke="#f57f17" stroke-width="1.5"/>
+      <text x="635" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#e65100">6. Business Logic</text>
+      <text x="635" y="228" text-anchor="middle" font-size="10" fill="#333">Route handler runs:</text>
+      <text x="635" y="242" text-anchor="middle" font-size="10" fill="#333">validates, transforms data</text>
+
+      <line x1="540" y1="220" x2="510" y2="220" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <rect x="350" y="185" width="155" height="70" rx="10" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="1.5"/>
+      <text x="427" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#4a148c">7. DB / AI Call</text>
+      <text x="427" y="228" text-anchor="middle" font-size="10" fill="#333">MongoDB query or</text>
+      <text x="427" y="242" text-anchor="middle" font-size="10" fill="#333">Gemini AI request</text>
+
+      <line x1="350" y1="220" x2="320" y2="220" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <rect x="150" y="185" width="165" height="70" rx="10" fill="#e0f7fa" stroke="#006064" stroke-width="1.5"/>
+      <text x="232" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#004d40">8. Format Response</text>
+      <text x="232" y="228" text-anchor="middle" font-size="10" fill="#333">Build JSON result</text>
+      <text x="232" y="242" text-anchor="middle" font-size="10" fill="#333">or error message</text>
+
+      <line x1="150" y1="220" x2="120" y2="220" stroke="#9fa8da" stroke-width="2" marker-end="url(#a2)"/>
+
+      <rect x="10" y="185" width="110" height="70" rx="10" fill="#e8f5e9" stroke="#388e3c" stroke-width="2"/>
+      <text x="65" y="212" text-anchor="middle" font-size="12" font-weight="700" fill="#1b5e20">9. Response</text>
+      <text x="65" y="228" text-anchor="middle" font-size="10" fill="#333">res.json({...})</text>
+      <text x="65" y="242" text-anchor="middle" font-size="10" fill="#333">sent to browser</text>
+
+      <!-- Error paths -->
+      <rect x="10" y="305" width="840" height="70" rx="10" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+      <text x="430" y="332" text-anchor="middle" font-size="13" font-weight="700" fill="#b71c1c">❌ Error Paths (any step can short-circuit and return an error)</text>
+      <text x="430" y="352" text-anchor="middle" font-size="11" fill="#c62828">401 Unauthorized (not logged in)  ·  403 Forbidden (wrong role)  ·  400 Bad Request (missing fields)  ·  500 Server Error (db/ai failure)</text>
+
+      <defs>
+        <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#9fa8da"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="info-box" style="margin-top:18px;">
+    <strong>Key Insight:</strong> The request flows through a <em>pipeline</em>. Each step can either pass it along or stop it with an error. This layered design keeps security checks separate from business logic — clean and maintainable.
+  </div>
+</div>
+
+</body>
+</html>

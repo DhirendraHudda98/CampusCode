@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backend Viva Guide – CodeArena</title>
+  <style>
+    /* ─── Base ─────────────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #1a1a2e;
+      background: #f7f8fc;
+    }
+    /* ─── Print ─────────────────────────────────────────────── */
+    @media print {
+      body { background: #fff; font-size: 11.5px; }
+      .no-print { display: none; }
+      .section { page-break-inside: avoid; }
+      h1, h2 { page-break-after: avoid; }
+    }
+
+    /* ─── Cover ─────────────────────────────────────────────── */
+    .cover {
+      background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #533483 100%);
+      color: #fff;
+      text-align: center;
+      padding: 80px 40px 60px;
+      page-break-after: always;
+    }
+    .cover h1 { font-size: 36px; letter-spacing: 1px; margin-bottom: 12px; }
+    .cover h2 { font-size: 20px; font-weight: 400; opacity: .85; margin-bottom: 30px; }
+    .cover .badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 12px;
+      margin: 4px;
+    }
+    .cover .meta { margin-top: 40px; opacity: .65; font-size: 12px; }
+
+    /* ─── Layout ─────────────────────────────────────────────── */
+    .container { max-width: 900px; margin: 0 auto; padding: 30px 24px; }
+
+    /* ─── Chapter header ─────────────────────────────────────── */
+    .chapter {
+      background: linear-gradient(90deg, #0f3460, #533483);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 10px;
+      margin: 40px 0 20px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    .chapter span { opacity: .7; font-size: 13px; font-weight: 400; margin-left: 8px; }
+
+    /* ─── Definition cards ───────────────────────────────────── */
+    .def-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .def-card {
+      background: #fff;
+      border-left: 5px solid #533483;
+      border-radius: 8px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .def-card h3 { font-size: 14px; color: #0f3460; margin-bottom: 6px; }
+    .def-card p  { color: #444; font-size: 12.5px; }
+
+    /* ─── Flow diagram ───────────────────────────────────────── */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      margin-bottom: 24px;
+    }
+    .flow-box {
+      background: linear-gradient(135deg, #0f3460, #533483);
+      color: #fff;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      min-width: 90px;
+    }
+    .flow-arrow {
+      color: #533483;
+      font-size: 20px;
+      font-weight: 700;
+      padding: 0 8px;
+    }
+
+    /* ─── Q&A cards ─────────────────────────────────────────── */
+    .qa { margin-bottom: 18px; }
+    .qa-q {
+      background: #0f3460;
+      color: #fff;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 18px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .qa-q .qnum {
+      display: inline-block;
+      background: #533483;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+      font-size: 11px;
+      margin-right: 10px;
+    }
+    .qa-a {
+      background: #fff;
+      border: 1px solid #e0e0f0;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 14px 18px;
+      color: #2d2d2d;
+      font-size: 12.5px;
+    }
+    .qa-a code {
+      background: #f0f0f8;
+      border: 1px solid #ddd;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: "Courier New", monospace;
+      font-size: 11.5px;
+      color: #c0392b;
+    }
+    .qa-a pre {
+      background: #1a1a2e;
+      color: #a9dc76;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+    .qa-a ul { padding-left: 20px; margin-top: 6px; }
+    .qa-a ul li { margin-bottom: 4px; }
+
+    /* ─── Table ─────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      margin-bottom: 20px;
+      font-size: 12.5px;
+    }
+    thead { background: linear-gradient(90deg, #0f3460, #533483); color: #fff; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #e8e8f0; }
+    tbody tr:hover { background: #f4f4ff; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* ─── Highlight boxes ────────────────────────────────────── */
+    .tip {
+      background: #eaf7ea;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 12.5px;
+      color: #1a4a1a;
+    }
+    .warn {
+      background: #fff8e1;
+      border-left: 4px solid #f39c12;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 12.5px;
+      color: #5a3c00;
+    }
+
+    /* ─── Print button ────────────────────────────────────────── */
+    .no-print {
+      position: fixed;
+      top: 20px; right: 20px;
+      background: #533483;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(83,52,131,.4);
+      z-index: 999;
+    }
+    .no-print:hover { background: #0f3460; }
+
+    /* ─── TOC ─────────────────────────────────────────────────── */
+    .toc {
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      margin-bottom: 30px;
+    }
+    .toc h2 { color: #0f3460; margin-bottom: 14px; font-size: 16px; }
+    .toc ol { padding-left: 22px; }
+    .toc li { margin-bottom: 6px; color: #533483; font-size: 13px; }
+    .toc a { color: #533483; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+
+    h4 { color: #0f3460; margin: 14px 0 6px; font-size: 13px; }
+    .section { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- Print Button -->
+<button class="no-print" onclick="window.print()">🖨️ Save / Print as PDF</button>
+
+<!-- ═══════════════════════ COVER ═══════════════════════ -->
+<div class="cover">
+  <h1>🚀 CodeArena Backend</h1>
+  <h2>Viva Questions, Answers &amp; Simple Definitions</h2>
+  <div>
+    <span class="badge">Node.js + Express</span>
+    <span class="badge">MongoDB</span>
+    <span class="badge">JWT Auth</span>
+    <span class="badge">REST API</span>
+    <span class="badge">bcrypt</span>
+    <span class="badge">CORS</span>
+  </div>
+  <p class="meta">Prepared for Viva / Interview | February 2026</p>
+</div>
+
+<!-- ═══════════════════════ CONTAINER ═══════════════════════ -->
+<div class="container">
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h2>📋 Table of Contents</h2>
+    <ol>
+      <li><a href="#ch1">Backend Architecture – Simple Definition</a></li>
+      <li><a href="#ch2">How Everything Connects (Request Flow)</a></li>
+      <li><a href="#ch3">Key Files Explained Simply</a></li>
+      <li><a href="#ch4">API Routes at a Glance</a></li>
+      <li><a href="#ch5">Viva Q&amp;A – Core Concepts</a></li>
+      <li><a href="#ch6">Viva Q&amp;A – Authentication &amp; Security</a></li>
+      <li><a href="#ch7">Viva Q&amp;A – Database (MongoDB)</a></li>
+      <li><a href="#ch8">Viva Q&amp;A – Routes &amp; Middleware</a></li>
+      <li><a href="#ch9">Viva Q&amp;A – Advanced / Tricky</a></li>
+      <li><a href="#ch10">Quick-Revision Cheatsheet</a></li>
+    </ol>
+  </div>
+
+  <!-- ═══ CHAPTER 1 ═══ -->
+  <div class="chapter" id="ch1">Chapter 1 <span>Backend Architecture – Simple Definition in Plain English</span></div>
+
+  <div class="def-grid">
+    <div class="def-card">
+      <h3>🖥️ What is a Backend?</h3>
+      <p>The backend is the <strong>brain of the application</strong> that runs on a server. Users never see it directly. It stores data, checks passwords, and sends results back to the frontend (browser).</p>
+    </div>
+    <div class="def-card">
+      <h3>⚡ What is Node.js?</h3>
+      <p>Node.js lets us run <strong>JavaScript on the server</strong> (outside the browser). It is very fast because it handles many requests at the same time without waiting — this is called <em>non-blocking / asynchronous</em>.</p>
+    </div>
+    <div class="def-card">
+      <h3>🚂 What is Express.js?</h3>
+      <p>Express is a <strong>framework on top of Node.js</strong>. Think of it as a set of ready-made tools that make it easy to create URL routes, handle requests, and send responses — without writing everything from scratch.</p>
+    </div>
+    <div class="def-card">
+      <h3>🍃 What is MongoDB?</h3>
+      <p>MongoDB is a <strong>NoSQL database</strong> that stores data as JSON-like documents (called collections). Instead of rows and columns like Excel, each record is a flexible document. Perfect for user profiles, problems, submissions, etc.</p>
+    </div>
+    <div class="def-card">
+      <h3>🔑 What is JWT?</h3>
+      <p>JWT (JSON Web Token) is a <strong>digital ticket</strong>. After you log in, the server creates a JWT and gives it to your browser. Every time you visit a protected page, you show this ticket — the server checks it and lets you in.</p>
+    </div>
+    <div class="def-card">
+      <h3>🔒 What is bcrypt?</h3>
+      <p>bcrypt is a <strong>password-hashing algorithm</strong>. It scrambles your password into a random-looking string. Even if someone steals the database, they cannot reverse the hash to find the original password.</p>
+    </div>
+    <div class="def-card">
+      <h3>🌐 What is a REST API?</h3>
+      <p>REST API is a set of <strong>rules for how the frontend talks to the backend</strong>. It uses URLs and HTTP methods: GET (read), POST (create), PUT/PATCH (update), DELETE (remove).</p>
+    </div>
+    <div class="def-card">
+      <h3>🛡️ What is CORS?</h3>
+      <p>CORS (Cross-Origin Resource Sharing) is a <strong>security rule in browsers</strong>. By default, a browser blocks requests to a different domain. CORS on the server tells the browser: "Yes, this frontend is allowed to talk to me."</p>
+    </div>
+    <div class="def-card">
+      <h3>🪝 What is Middleware?</h3>
+      <p>Middleware is code that <strong>runs between a request arriving and a response being sent</strong>. Like a security guard at a door — every request must pass through it. Used for authentication, logging, parsing JSON, etc.</p>
+    </div>
+    <div class="def-card">
+      <h3>🍪 What is a Cookie?</h3>
+      <p>A cookie is a <strong>small piece of data stored in the browser</strong>. This project stores the JWT inside an <em>HttpOnly</em> cookie so JavaScript cannot steal it (XSS protection).</p>
+    </div>
+    <div class="def-card">
+      <h3>🔔 What is dotenv?</h3>
+      <p>dotenv reads a <code>.env</code> file and loads secret values (like passwords, API keys) into <code>process.env</code>. This keeps secrets <strong>out of the source code</strong>.</p>
+    </div>
+    <div class="def-card">
+      <h3>🤖 What is the AI Route?</h3>
+      <p>The AI route uses <strong>Google Gemini API</strong> to generate coding problems, hints, or explanations. The backend calls Gemini's API and returns the response to the frontend.</p>
+    </div>
+  </div>
+
+  <!-- ═══ CHAPTER 2 ═══ -->
+  <div class="chapter" id="ch2">Chapter 2 <span>How Everything Connects – The Complete Request Flow</span></div>
+
+  <h4>🔄 A Simple Request Journey (e.g., user clicks "Login")</h4>
+  <div class="flow">
+    <div class="flow-box">Browser<br/>(Frontend)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">HTTP Request<br/>POST /api/auth/login</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">CORS Check<br/>(Express)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">authMiddleware<br/>(reads cookie)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Route Handler<br/>auth.js</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">MongoDB<br/>findOne(user)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">bcrypt<br/>compare password</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Sign JWT<br/>Set Cookie</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">JSON Response<br/>to Browser</div>
+  </div>
+
+  <h4>🔐 Protected Route Journey (e.g., user visits their profile)</h4>
+  <div class="flow">
+    <div class="flow-box">Browser sends<br/>Cookie (JWT)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">authMiddleware<br/>extracts token</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">verifyToken()<br/>JWT valid?</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">req.user set<br/>(user data)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">requireAuth<br/>checks req.user</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Route Handler<br/>runs</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Data from<br/>MongoDB</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">JSON sent<br/>to Browser</div>
+  </div>
+
+  <h4>🗄️ How the Backend Connects to MongoDB</h4>
+  <div class="flow">
+    <div class="flow-box">server.js starts</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">dotenv loads<br/>MONGODB_URI</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">MongoClient<br/>connects</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">getDb() returns<br/>database object</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Routes use<br/>db.collection()</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">Read/Write<br/>Documents</div>
+  </div>
+
+  <div class="tip">💡 <strong>Simple Analogy:</strong> Think of the backend like a <strong>restaurant kitchen</strong>. The browser (customer) orders food (request). The waiter (Express route) takes the order. The chef (business logic) prepares it using ingredients from the fridge (MongoDB). The security guard (middleware/JWT) checks that only paying customers get food.</div>
+
+  <!-- ═══ CHAPTER 3 ═══ -->
+  <div class="chapter" id="ch3">Chapter 3 <span>Key Files Explained Simply</span></div>
+
+  <table>
+    <thead><tr><th>File</th><th>What It Does (Simple)</th><th>Key Exports / Functions</th></tr></thead>
+    <tbody>
+      <tr><td><strong>server.js</strong></td><td>The <em>main entry point</em>. Starts the Express server, sets up CORS, connects all routes. Like the "receptionist" who routes calls.</td><td><code>app.listen(5000)</code>, all <code>app.use()</code></td></tr>
+      <tr><td><strong>auth.js</strong></td><td>Handles passwords and JWT tokens. Does NOT talk to MongoDB — just crypto functions.</td><td><code>hashPassword</code>, <code>comparePassword</code>, <code>signToken</code>, <code>verifyToken</code>, <code>createAuthCookie</code></td></tr>
+      <tr><td><strong>middleware.js</strong></td><td>Runs on every request. Reads the JWT cookie and attaches the user to <code>req.user</code>.</td><td><code>authMiddleware</code>, <code>requireAuth</code>, <code>requireRole</code></td></tr>
+      <tr><td><strong>mongodb.js</strong></td><td>Manages the database connection. Has an in-memory fallback if no MongoDB URI is set.</td><td><code>getDb()</code>, <code>isMemoryMode</code></td></tr>
+      <tr><td><strong>routes/auth.js</strong></td><td>Handles <code>/api/auth/login</code> and <code>/api/auth/register</code>. Validates input, checks DB, returns JWT cookie.</td><td>POST <code>/login</code>, POST <code>/register</code></td></tr>
+      <tr><td><strong>routes/problems.js</strong></td><td>CRUD for coding problems (list, add, update, delete).</td><td>GET <code>/api/problems</code>, POST, PUT, DELETE</td></tr>
+      <tr><td><strong>routes/submissions.js</strong></td><td>Stores and retrieves code submissions made by users.</td><td>POST <code>/api/submissions</code></td></tr>
+      <tr><td><strong>routes/run.js</strong></td><td>Executes code (likely calls an external judge/compiler API).</td><td>POST <code>/api/run</code></td></tr>
+      <tr><td><strong>routes/ai.js</strong></td><td>Calls Google Gemini API to generate hints/problems using AI.</td><td>POST <code>/api/ai</code></td></tr>
+      <tr><td><strong>routes/leaderboard.js</strong></td><td>Returns ranked list of users by solved problems / score.</td><td>GET <code>/api/leaderboard</code></td></tr>
+      <tr><td><strong>routes/contests.js</strong></td><td>Manages coding contests (list, join, submit).</td><td>GET/POST <code>/api/contests</code></td></tr>
+      <tr><td><strong>routes/admin.js</strong></td><td>Admin-only routes: manage users, suspend accounts, view stats.</td><td>Protected by <code>requireRole("admin")</code></td></tr>
+      <tr><td><strong>routes/teacher.js</strong></td><td>Teacher-only routes: create assignments, view student progress.</td><td>Protected by <code>requireRole("teacher")</code></td></tr>
+      <tr><td><strong>routes/notifications.js</strong></td><td>Fetch and mark notifications for a user.</td><td>GET <code>/api/notifications</code></td></tr>
+      <tr><td><strong>routes/bookmarks.js</strong></td><td>Save/remove bookmarked problems.</td><td>POST/DELETE <code>/api/bookmarks</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ CHAPTER 4 ═══ -->
+  <div class="chapter" id="ch4">Chapter 4 <span>API Routes at a Glance</span></div>
+
+  <table>
+    <thead><tr><th>Base URL</th><th>Method</th><th>Endpoint</th><th>Auth Required</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>/api/auth</td><td>POST</td><td>/login</td><td>No</td><td>Login user, set JWT cookie</td></tr>
+      <tr><td>/api/auth</td><td>POST</td><td>/register</td><td>No</td><td>Create new account</td></tr>
+      <tr><td>/api/auth</td><td>GET</td><td>/me</td><td>Yes</td><td>Return currently logged-in user</td></tr>
+      <tr><td>/api/auth</td><td>POST</td><td>/logout</td><td>Yes</td><td>Clear JWT cookie</td></tr>
+      <tr><td>/api/problems</td><td>GET</td><td>/</td><td>No</td><td>List all problems</td></tr>
+      <tr><td>/api/problems</td><td>GET</td><td>/:id</td><td>No</td><td>Get single problem by ID</td></tr>
+      <tr><td>/api/problems</td><td>POST</td><td>/</td><td>Admin/Teacher</td><td>Create new problem</td></tr>
+      <tr><td>/api/submissions</td><td>POST</td><td>/</td><td>Yes</td><td>Submit code solution</td></tr>
+      <tr><td>/api/run</td><td>POST</td><td>/</td><td>Yes</td><td>Run code and get output</td></tr>
+      <tr><td>/api/ai</td><td>POST</td><td>/generate</td><td>Yes</td><td>AI-generate problem/hint</td></tr>
+      <tr><td>/api/leaderboard</td><td>GET</td><td>/</td><td>No</td><td>Get ranked user list</td></tr>
+      <tr><td>/api/contests</td><td>GET</td><td>/</td><td>No</td><td>List all contests</td></tr>
+      <tr><td>/api/admin</td><td>*</td><td>/</td><td>Admin only</td><td>User management, stats</td></tr>
+      <tr><td>/api/teacher</td><td>*</td><td>/</td><td>Teacher only</td><td>Assignments, student data</td></tr>
+      <tr><td>/api/bookmarks</td><td>GET/POST</td><td>/</td><td>Yes</td><td>User's bookmarked problems</td></tr>
+      <tr><td>/api/daily</td><td>GET</td><td>/</td><td>No</td><td>Today's daily challenge</td></tr>
+      <tr><td>/api/notifications</td><td>GET</td><td>/</td><td>Yes</td><td>User notifications</td></tr>
+      <tr><td>/api/placements</td><td>GET</td><td>/</td><td>No</td><td>Placement prep resources</td></tr>
+      <tr><td>/api/prep</td><td>GET</td><td>/</td><td>No</td><td>DSA prep material</td></tr>
+      <tr><td>/health</td><td>GET</td><td>/</td><td>No</td><td>Server + DB health check</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ CHAPTER 5 ═══ -->
+  <div class="chapter" id="ch5">Chapter 5 <span>Viva Q&amp;A – Core Backend Concepts</span></div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">1</span> What is the role of <code>server.js</code> in this project?</div>
+    <div class="qa-a">
+      <code>server.js</code> is the <strong>main entry point</strong> of the backend. It:
+      <ul>
+        <li>Creates the Express application (<code>const app = express()</code>)</li>
+        <li>Configures CORS to allow the frontend origin</li>
+        <li>Attaches global middleware: <code>express.json()</code> (parses request bodies), <code>authMiddleware</code> (reads JWT cookie on every request)</li>
+        <li>Mounts all route files under their respective paths (e.g., <code>app.use("/api/auth", authRoutes)</code>)</li>
+        <li>Starts the HTTP server: <code>app.listen(PORT)</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">2</span> What is Express.js and why is it used?</div>
+    <div class="qa-a">
+      Express.js is a <strong>minimal and flexible web framework for Node.js</strong>. It simplifies:
+      <ul>
+        <li>Defining URL routes (GET, POST, PUT, DELETE)</li>
+        <li>Handling HTTP requests and responses</li>
+        <li>Adding middleware (authentication, logging, body parsing)</li>
+      </ul>
+      Without Express, you would have to write everything using Node's raw <code>http</code> module, which is much more complex.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">3</span> What HTTP methods are used and what do they mean?</div>
+    <div class="qa-a">
+      <table style="margin-top:8px">
+        <thead><tr><th>Method</th><th>Meaning</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>GET</td><td>Read/fetch data</td><td>Get list of problems</td></tr>
+          <tr><td>POST</td><td>Create new data</td><td>Register user, submit code</td></tr>
+          <tr><td>PUT</td><td>Replace existing data completely</td><td>Update entire problem</td></tr>
+          <tr><td>PATCH</td><td>Update part of existing data</td><td>Update only username</td></tr>
+          <tr><td>DELETE</td><td>Remove data</td><td>Delete a bookmark</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">4</span> What is <code>dotenv</code> and why is it important?</div>
+    <div class="qa-a">
+      <code>dotenv</code> reads a <code>.env</code> file and loads key-value pairs into <code>process.env</code>. Example <code>.env</code>:
+      <pre>MONGODB_URI=mongodb://localhost:27017/codearena
+JWT_SECRET=mysupersecretkey
+PORT=5000</pre>
+      This is important because:
+      <ul>
+        <li>Secrets are not hardcoded in source code</li>
+        <li>Different values can be used in development vs production</li>
+        <li><code>.env</code> files are added to <code>.gitignore</code> so they are never uploaded to GitHub</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">5</span> What is CORS and how is it configured here?</div>
+    <div class="qa-a">
+      CORS = <strong>Cross-Origin Resource Sharing</strong>. Browsers block requests from one domain to another by default (security). The backend must tell the browser "this origin is allowed".
+      <br/><br/>In this project:
+      <pre>app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin))
+      return callback(null, true);
+    callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,  // allows cookies to be sent
+}));</pre>
+      <code>credentials: true</code> is required because we send the JWT via cookies.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">6</span> What is the difference between synchronous and asynchronous code?</div>
+    <div class="qa-a">
+      <ul>
+        <li><strong>Synchronous:</strong> Code runs line by line, waiting for each operation to finish. If reading a file takes 2 seconds, everything stops.</li>
+        <li><strong>Asynchronous:</strong> Code does NOT wait. It starts an operation and moves on. When the result is ready, a callback/promise handles it.</li>
+      </ul>
+      This project uses <code>async/await</code> everywhere (e.g., <code>const user = await users.findOne(...)</code>) which makes async code look readable.
+    </div>
+  </div>
+
+  <!-- ═══ CHAPTER 6 ═══ -->
+  <div class="chapter" id="ch6">Chapter 6 <span>Viva Q&amp;A – Authentication &amp; Security</span></div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">7</span> How does user registration work step by step?</div>
+    <div class="qa-a">
+      <ol style="padding-left:20px; margin-top:6px">
+        <li>Frontend sends: <code>POST /api/auth/register</code> with <code>{ username, email, password }</code></li>
+        <li>Validate inputs (length, required fields)</li>
+        <li>Check if email or username already exists in MongoDB</li>
+        <li>Hash password: <code>bcrypt.hashSync(password, 12)</code> — salt rounds = 12</li>
+        <li>Insert new user document into <code>users</code> collection</li>
+        <li>Create JWT: <code>jwt.sign({ userId, username, email, role }, SECRET)</code></li>
+        <li>Set JWT as HttpOnly cookie in response header</li>
+        <li>Return <code>{ success: true, user: {...} }</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">8</span> How does user login work?</div>
+    <div class="qa-a">
+      <ol style="padding-left:20px; margin-top:6px">
+        <li>Frontend sends: <code>POST /api/auth/login</code> with <code>{ email, password }</code></li>
+        <li>Find user in MongoDB by email</li>
+        <li>If not found → 401 "Invalid credentials"</li>
+        <li>Compare password: <code>bcrypt.compareSync(password, user.passwordHash)</code></li>
+        <li>If wrong → 401 "Invalid credentials"</li>
+        <li>Check if account is suspended → 403 "SUSPENDED"</li>
+        <li>Update <code>lastActive</code> timestamp</li>
+        <li>Sign JWT and set HttpOnly cookie</li>
+        <li>Return user info (no password hash)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">9</span> What is JWT and how does it work?</div>
+    <div class="qa-a">
+      JWT = <strong>JSON Web Token</strong>. It has 3 parts separated by dots: <code>header.payload.signature</code>
+      <ul>
+        <li><strong>Header:</strong> Algorithm used (e.g., HS256)</li>
+        <li><strong>Payload:</strong> The data (userId, role, expiry) — <em>base64 encoded, NOT encrypted</em></li>
+        <li><strong>Signature:</strong> Proves the token was created by our server using the secret key</li>
+      </ul>
+      In this project:
+      <pre>jwt.sign({ userId, username, email, role }, JWT_SECRET, { expiresIn: "7d" })</pre>
+      Token expires in <strong>7 days</strong>. The server verifies it using <code>jwt.verify(token, JWT_SECRET)</code>.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">10</span> Why is the JWT stored in an HttpOnly cookie instead of localStorage?</div>
+    <div class="qa-a">
+      <strong>HttpOnly cookie</strong> = JavaScript in the browser <em>cannot</em> read it. This protects against <strong>XSS (Cross-Site Scripting)</strong> attacks, where malicious JavaScript tries to steal tokens.
+      <br/><br/>
+      <table style="margin-top:8px">
+        <thead><tr><th>Storage</th><th>XSS Safe</th><th>CSRF Risk</th></tr></thead>
+        <tbody>
+          <tr><td>HttpOnly Cookie ✅</td><td>Yes</td><td>Small (mitigated by SameSite=Lax)</td></tr>
+          <tr><td>localStorage ❌</td><td>No — JS can read it</td><td>N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">11</span> What does bcrypt do? What is a "salt"?</div>
+    <div class="qa-a">
+      bcrypt <strong>hashes passwords</strong> so they cannot be reversed. A <strong>salt</strong> is a random string added to the password before hashing — this ensures two users with the same password get <em>different</em> hashes.
+      <pre>// Hashing (during registration)
+bcrypt.hashSync("mypassword", 12)
+// → "$2b$12$abc...xyz" (irreversible)
+
+// Checking (during login)
+bcrypt.compareSync("mypassword", storedHash)
+// → true or false</pre>
+      Salt rounds = 12 means bcrypt runs 2¹² = 4096 iterations — making brute-force attacks very slow.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">12</span> How does middleware protect routes?</div>
+    <div class="qa-a">
+      Three middleware functions are used:
+      <ul>
+        <li><code>authMiddleware</code> — runs on <strong>every</strong> request. Reads the JWT cookie, verifies it, and sets <code>req.user</code>. If no cookie, <code>req.user = null</code>.</li>
+        <li><code>requireAuth</code> — checks if <code>req.user</code> exists. If not → <code>401 Unauthorized</code>.</li>
+        <li><code>requireRole("admin")</code> — checks if <code>req.user.role === "admin"</code>. If not → <code>403 Forbidden</code>.</li>
+      </ul>
+      <pre>router.get("/stats", requireRole("admin"), async (req, res) => {
+  // Only admins reach here
+});</pre>
+    </div>
+  </div>
+
+  <!-- ═══ CHAPTER 7 ═══ -->
+  <div class="chapter" id="ch7">Chapter 7 <span>Viva Q&amp;A – Database (MongoDB)</span></div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">13</span> What is MongoDB and how is it different from SQL databases?</div>
+    <div class="qa-a">
+      <table style="margin-top:8px">
+        <thead><tr><th>Feature</th><th>MongoDB (NoSQL)</th><th>MySQL/PostgreSQL (SQL)</th></tr></thead>
+        <tbody>
+          <tr><td>Data format</td><td>JSON documents</td><td>Rows &amp; columns</td></tr>
+          <tr><td>Schema</td><td>Flexible (no fixed schema)</td><td>Fixed schema (ALTER TABLE)</td></tr>
+          <tr><td>Relations</td><td>Embedded or referenced</td><td>JOIN tables</td></tr>
+          <tr><td>Scaling</td><td>Horizontal (sharding)</td><td>Vertical (bigger server)</td></tr>
+          <tr><td>Query language</td><td>BSON queries / aggregation</td><td>SQL</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">14</span> What is the in-memory fallback in <code>mongodb.js</code>?</div>
+    <div class="qa-a">
+      If <code>MONGODB_URI</code> is not set in the <code>.env</code> file, the backend uses an <strong>in-memory JavaScript object</strong> as a fake database. This allows:
+      <ul>
+        <li>Running and testing without a real MongoDB installation</li>
+        <li>Quick demo/development without setup</li>
+      </ul>
+      <code>isMemoryMode = true</code> tells the app it's using the fake DB. <strong>Data is lost when the server restarts.</strong>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">15</span> How does the backend connect to MongoDB?</div>
+    <div class="qa-a">
+      <pre>import { MongoClient } from "mongodb";
+const client = new MongoClient(MONGODB_URI);
+await client.connect();
+const db = client.db("codearena"); // database name</pre>
+      The <code>getDb()</code> function returns the connected database object. Routes then call:
+      <pre>const db = await getDb();
+const users = db.collection("users"); // get a collection
+const user = await users.findOne({ email: "test@test.com" });</pre>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">16</span> Name some MongoDB operations used in this project.</div>
+    <div class="qa-a">
+      <table style="margin-top:8px">
+        <thead><tr><th>Operation</th><th>Usage</th></tr></thead>
+        <tbody>
+          <tr><td><code>findOne(filter)</code></td><td>Get single document (e.g., find user by email)</td></tr>
+          <tr><td><code>find(filter).toArray()</code></td><td>Get multiple documents (e.g., list all problems)</td></tr>
+          <tr><td><code>insertOne(doc)</code></td><td>Add new document (register user, add problem)</td></tr>
+          <tr><td><code>updateOne(filter, {$set})</code></td><td>Update fields in a document</td></tr>
+          <tr><td><code>deleteOne(filter)</code></td><td>Remove a document</td></tr>
+          <tr><td><code>find().sort().limit()</code></td><td>Sorted and limited results (leaderboard)</td></tr>
+          <tr><td><code>countDocuments()</code></td><td>Count matching documents</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ CHAPTER 8 ═══ -->
+  <div class="chapter" id="ch8">Chapter 8 <span>Viva Q&amp;A – Routes &amp; Middleware</span></div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">17</span> What is a Router in Express and why use it?</div>
+    <div class="qa-a">
+      <code>express.Router()</code> creates a <strong>mini Express application</strong> that handles a group of related routes. Benefits:
+      <ul>
+        <li>Keeps code organized — auth routes in one file, problem routes in another</li>
+        <li>Each router is mounted at a base path in <code>server.js</code></li>
+      </ul>
+      <pre>// routes/auth.js
+const router = express.Router();
+router.post("/login", handler);  // becomes POST /api/auth/login
+
+// server.js
+app.use("/api/auth", authRoutes);</pre>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">18</span> What are route parameters vs query strings?</div>
+    <div class="qa-a">
+      <ul>
+        <li><strong>Route parameter:</strong> Part of the URL path — <code>/api/problems/:id</code> → accessed as <code>req.params.id</code></li>
+        <li><strong>Query string:</strong> After the <code>?</code> — <code>/api/problems?difficulty=easy</code> → accessed as <code>req.query.difficulty</code></li>
+        <li><strong>Request body:</strong> JSON data in POST/PUT requests → accessed as <code>req.body.email</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">19</span> What HTTP status codes are used and what do they mean?</div>
+    <div class="qa-a">
+      <table style="margin-top:8px">
+        <thead><tr><th>Code</th><th>Meaning</th><th>When used</th></tr></thead>
+        <tbody>
+          <tr><td>200</td><td>OK</td><td>Successful request</td></tr>
+          <tr><td>201</td><td>Created</td><td>New resource created</td></tr>
+          <tr><td>400</td><td>Bad Request</td><td>Missing/invalid input</td></tr>
+          <tr><td>401</td><td>Unauthorized</td><td>Not logged in / wrong credentials</td></tr>
+          <tr><td>403</td><td>Forbidden</td><td>Logged in but wrong role</td></tr>
+          <tr><td>404</td><td>Not Found</td><td>Resource doesn't exist</td></tr>
+          <tr><td>500</td><td>Internal Server Error</td><td>Unhandled server crash</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">20</span> What are the three user roles and how are they enforced?</div>
+    <div class="qa-a">
+      Three roles: <strong>student</strong>, <strong>teacher</strong>, <strong>admin</strong>.
+      <ul>
+        <li>Role is stored in the JWT payload and in MongoDB</li>
+        <li><code>requireRole("admin")</code> middleware blocks anyone without admin role → 403</li>
+        <li><code>requireAuth</code> blocks unauthenticated users → 401</li>
+        <li>Example: Admin can suspend users, Teacher can see all student progress, Student can solve problems</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">21</span> What does <code>express.json()</code> do?</div>
+    <div class="qa-a">
+      It is built-in Express middleware that <strong>parses incoming requests with JSON bodies</strong>. Without it, <code>req.body</code> would be <code>undefined</code> when the frontend sends JSON data.
+      <pre>app.use(express.json()); // must be before routes</pre>
+    </div>
+  </div>
+
+  <!-- ═══ CHAPTER 9 ═══ -->
+  <div class="chapter" id="ch9">Chapter 9 <span>Viva Q&amp;A – Advanced / Tricky Questions</span></div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">22</span> What is the difference between authentication and authorization?</div>
+    <div class="qa-a">
+      <ul>
+        <li><strong>Authentication</strong> = Proving who you are ("I am Alice, here is my password")</li>
+        <li><strong>Authorization</strong> = Checking what you are allowed to do ("Alice is a student, she cannot access admin panel")</li>
+      </ul>
+      In this project: Login = authentication. <code>requireRole()</code> = authorization.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">23</span> What happens if the JWT is expired or tampered with?</div>
+    <div class="qa-a">
+      <code>jwt.verify(token, JWT_SECRET)</code> throws an error if:
+      <ul>
+        <li>Token is expired (past 7 days)</li>
+        <li>Signature doesn't match (token was tampered with)</li>
+      </ul>
+      The <code>verifyToken()</code> function catches this error and returns <code>null</code>. Then <code>authMiddleware</code> sets <code>req.user = null</code>, effectively treating the user as logged out.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">24</span> What is the purpose of <code>type: "module"</code> in <code>package.json</code>?</div>
+    <div class="qa-a">
+      Setting <code>"type": "module"</code> enables <strong>ES Module syntax</strong> (<code>import/export</code>) in Node.js. Without it, Node.js uses CommonJS (<code>require/module.exports</code>). This project uses modern <code>import</code> statements throughout, which require this setting.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">25</span> What is a health check endpoint and why is it useful?</div>
+    <div class="qa-a">
+      <code>GET /health</code> returns the server and database status:
+      <pre>{ "status": "ok", "db": "mongodb", "dbStatus": "connected", "timestamp": "..." }</pre>
+      Used by:
+      <ul>
+        <li>Deployment platforms (Render, Railway) to know if the server is alive</li>
+        <li>Developers to quickly debug connectivity issues</li>
+        <li>Monitoring tools to alert if the server goes down</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">26</span> What is the difference between <code>PUT</code> and <code>PATCH</code>?</div>
+    <div class="qa-a">
+      <ul>
+        <li><strong>PUT</strong> — Replace the entire resource. If you omit a field, it gets deleted.</li>
+        <li><strong>PATCH</strong> — Partially update. Only the fields you send are changed; others stay the same.</li>
+      </ul>
+      Example: PATCH <code>{ username: "newname" }</code> only updates the username. PUT would erase all other fields.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">27</span> How does the AI route work with Google Gemini?</div>
+    <div class="qa-a">
+      <ol style="padding-left:20px; margin-top:6px">
+        <li>Frontend sends a prompt to <code>POST /api/ai/generate</code></li>
+        <li>The route uses <code>@google/genai</code> package to call the Gemini API</li>
+        <li>Google's AI model processes the prompt and returns generated text</li>
+        <li>The backend sends this text back to the frontend</li>
+      </ol>
+      The API key is stored in <code>process.env.GEMINI_API_KEY</code> (never in code).
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">28</span> What is async/await and how is it used in mongoose/MongoDB queries?</div>
+    <div class="qa-a">
+      <code>async/await</code> is syntax sugar over Promises. It makes asynchronous code look synchronous:
+      <pre>// Without async/await (callbacks - messy)
+users.findOne({ email }).then(user => {
+  if (!user) return res.status(401)...
+});
+
+// With async/await (clean)
+const user = await users.findOne({ email });
+if (!user) return res.status(401)...
+</pre>
+      The <code>async</code> keyword on the function allows using <code>await</code> inside it. Always wrap in <code>try/catch</code> to handle errors.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">29</span> What happens when a user logs out?</div>
+    <div class="qa-a">
+      The logout route sends a <strong>clear cookie</strong> header:
+      <pre>res.setHeader("Set-Cookie", "token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0");</pre>
+      <code>Max-Age=0</code> tells the browser to immediately delete the cookie. Since the JWT is gone, all future requests will have no token → <code>req.user = null</code>.
+    </div>
+  </div>
+
+  <div class="qa section">
+    <div class="qa-q"><span class="qnum">30</span> What is the <code>ObjectId</code> in MongoDB?</div>
+    <div class="qa-a">
+      Every MongoDB document gets an <code>_id</code> field automatically. Its type is <code>ObjectId</code> — a 12-byte unique identifier. When comparing IDs from URL params (strings) with database IDs, you must convert:
+      <pre>import { ObjectId } from "mongodb";
+const doc = await collection.findOne({ _id: new ObjectId(req.params.id) });</pre>
+      Failing to convert causes "no match" even if IDs look the same.
+    </div>
+  </div>
+
+  <!-- ═══ CHAPTER 10 ═══ -->
+  <div class="chapter" id="ch10">Chapter 10 <span>Quick-Revision Cheatsheet</span></div>
+
+  <div class="def-grid">
+    <div class="def-card">
+      <h3>Auth Flow</h3>
+      <p>Register → hash pw → store user → sign JWT → set HttpOnly cookie<br/>Login → find user → compare pw → sign JWT → set cookie<br/>Logout → clear cookie</p>
+    </div>
+    <div class="def-card">
+      <h3>JWT Structure</h3>
+      <p><strong>Header</strong> (alg) . <strong>Payload</strong> (userId, role, exp) . <strong>Signature</strong><br/>Expires in 7 days. Secret stored in <code>JWT_SECRET</code> env var.</p>
+    </div>
+    <div class="def-card">
+      <h3>bcrypt</h3>
+      <p>hashSync(pw, 12) → irreversible hash<br/>compareSync(pw, hash) → true/false<br/>Salt rounds = 12 → 4096 iterations</p>
+    </div>
+    <div class="def-card">
+      <h3>Middleware Order</h3>
+      <p>cors() → express.json() → authMiddleware → routes → (requireAuth / requireRole inside routes)</p>
+    </div>
+    <div class="def-card">
+      <h3>MongoDB Key Ops</h3>
+      <p>findOne · find · insertOne · updateOne($set) · deleteOne · countDocuments · sort · limit</p>
+    </div>
+    <div class="def-card">
+      <h3>Status Codes</h3>
+      <p>200 OK · 201 Created · 400 Bad Input · 401 Not Logged In · 403 Wrong Role · 404 Not Found · 500 Server Error</p>
+    </div>
+    <div class="def-card">
+      <h3>Roles</h3>
+      <p><strong>student</strong> – default, solve problems<br/><strong>teacher</strong> – manage assignments<br/><strong>admin</strong> – full control, suspend users</p>
+    </div>
+    <div class="def-card">
+      <h3>Key Dependencies</h3>
+      <p>express · cors · dotenv · bcryptjs · jsonwebtoken · mongodb · @google/genai</p>
+    </div>
+    <div class="def-card">
+      <h3>Port &amp; CORS</h3>
+      <p>Backend: port 5000 (default)<br/>Frontend: port 5173<br/>CORS allows frontend origin + credentials</p>
+    </div>
+  </div>
+
+  <div class="warn">⚠️ <strong>Remember for Viva:</strong> The JWT payload is only base64-encoded, NOT encrypted. Never store sensitive data (passwords) in the JWT payload. Always use HTTPS in production.</div>
+
+  <div class="tip">✅ <strong>Key Points to Always Mention:</strong> HttpOnly cookie prevents XSS · bcrypt salt prevents rainbow table attacks · requireRole enforces authorization · dotenv keeps secrets safe · In-memory fallback allows running without MongoDB</div>
+
+  <br/><br/>
+  <div style="text-align:center; color:#888; font-size:12px; padding: 20px 0 30px; border-top: 1px solid #e0e0f0; margin-top: 20px;">
+    CodeArena Backend Viva Guide | Node.js + Express + MongoDB + JWT | Prepared February 2026
+  </div>
+
+</div><!-- /container -->
+</body>
+</html>
