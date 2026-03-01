@@ -2,7 +2,7 @@
 
 A full-stack competitive coding platform with problem solving, contests, placements, and AI-powered features.
 
-## ?? What We Fixed
+##  What We Fixed
 
 ### Why It Wasn''t Working & Solutions
 
@@ -14,7 +14,7 @@ A full-stack competitive coding platform with problem solving, contests, placeme
 | Bland UI | Minimal styling | Added Tailwind CSS throughout |
 | No Mobile Support | Desktop-only design | Added responsive mobile menu |
 
-## ?? Quick Start
+##  Quick Start
 
 ### Start Backend (Terminal 1)
 ```bash
@@ -32,7 +32,7 @@ npm run dev
 
 Open http://localhost:5173
 
-## ?? Features
+##  Features
 
 - 1000+ coding problems (Easy, Medium, Hard)
 - Real-time code editor with test cases
@@ -49,7 +49,7 @@ Sign up at /register to create a new account. Choose your role:
 - Teacher: Create problems, post jobs
 - Admin: Manage users
 
-## ?? Project Structure
+##  Project Structure
 
 ```
 backend/          - Express.js server (12 routes, MongoDB)
@@ -58,12 +58,12 @@ public/           - Static files
 scripts/          - Data seeding scripts
 ```
 
-## ?? Technologies
+##  Technologies
 
 Frontend: React 18, Vite, React Router, Tailwind CSS, Axios
 Backend: Node.js, Express, MongoDB, JWT, bcryptjs
 
-## ?? Improvements Made
+##  Improvements Made
 
 ? API Proxy in Vite config for seamless frontend-backend communication
 ? Enhanced Navbar with all page links and role-based navigation  
@@ -74,14 +74,14 @@ Backend: Node.js, Express, MongoDB, JWT, bcryptjs
 ? Loading states throughout
 ? All 14 pages ported and functional
 
-## ?? Common Issues
+##  Common Issues
 
 **"Cannot find module express"** ? cd backend && npm install
 **CORS Errors** ? Make sure backend is running on 5000
 **Port in use** ? kill old node processes or use different port
 **Frontend won''t load** ? Clear cache and restart Vite
 
-## ?? API Base URL
+##  API Base URL
 
 Frontend proxies all /api/* requests to http://localhost:5000 via Vite proxy.
 
